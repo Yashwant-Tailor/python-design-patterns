@@ -87,7 +87,7 @@ class FruitNotAvailableError(Exception):
         super().__init__(msg)
 
     def __str__(self):
-        return str(self)
+        return repr(self)
 
 
 class NotEnoughBalanceError(Exception):
@@ -95,7 +95,7 @@ class NotEnoughBalanceError(Exception):
         super().__init__(msg)
 
     def __str__(self):
-        return str(self)
+        return repr(self)
 
 
 class EmptyBasketError(Exception):
@@ -103,7 +103,7 @@ class EmptyBasketError(Exception):
         super().__init__(msg)
 
     def __str__(self):
-        return str(self)
+        return repr(self)
 
 
 class Customer:
@@ -181,7 +181,9 @@ rohan = Customer("Rohan",110)
 if fruit_store.can_buy(rohan,FruitLabel.kiwi):
     fruit = fruit_store.buy(rohan,FruitLabel.kiwi)
     rohan.add_fruit_to_basket(fruit)
-# fruit = fruit_store.buy(rohan,FruitLabel.orange) # this operation will fail
+if fruit_store.can_buy(rohan,FruitLabel.orange):
+    fruit = fruit_store.buy(rohan,FruitLabel.orange)
+    rohan.add_fruit_to_basket(fruit)
 if fruit_store.can_buy(rohan,FruitLabel.apple):
     fruit = fruit_store.buy(rohan,FruitLabel.apple)
     rohan.add_fruit_to_basket(fruit)
@@ -195,6 +197,7 @@ rohan.list_all_fruits_in_basket()
 # PythonFruitFactory now has ORANGE's
 # PythonFruitFactory now has KIWI's
 # Rohan bought KIWI
+# NotEnoughBalanceError("Rohan doesn't have the enough balance to buy ORANGE")
 # Rohan bought APPLE
 # Rohan's basket has these fruits:
 # 	1) name = "KIWI", shape = "Ovoid", taste = "Sweet And Sour"
