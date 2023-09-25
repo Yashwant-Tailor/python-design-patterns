@@ -39,10 +39,10 @@ class FruitInterface(ABC):
 # create apple class
 class Apple(FruitInterface):
     def taste(self) -> str:
-        return "Apple tastes sweet , tart or a little of both"
+        return "Sweet, Tart or a little of both"
 
     def shape(self) -> str:
-        return "Apple has roundish shape"
+        return "Roundish"
 
     def name(self) -> str:
         return FruitLabel.apple.value
@@ -54,10 +54,10 @@ class Apple(FruitInterface):
 
 class Orange(FruitInterface):
     def taste(self) -> str:
-        return "Orange tastes sweet and tart"
+        return "Sweet And Tart"
 
     def shape(self) -> str:
-        return "Orange has spherical shape"
+        return "Spherical"
 
     def name(self) -> str:
         return FruitLabel.orange.value
@@ -69,10 +69,10 @@ class Orange(FruitInterface):
 
 class Kiwi(FruitInterface):
     def taste(self) -> str:
-        return "Kiwi tastes sweet and sour"
+        return "Sweet And Sour"
 
     def shape(self) -> str:
-        return "Kiwi has ovoid shape"
+        return "Ovoid"
 
     def name(self) -> str:
         return FruitLabel.kiwi.value
@@ -122,6 +122,9 @@ class Customer:
     def list_all_fruits_in_basket(self) -> None:
         if len(self.fruit_basket) == 0:
             raise EmptyBasketError(f"{self.name}'s fruit basket is empty !!!")
+        print(f"{self.name}'s basket has these fruits:")
+        for idx,fruit in enumerate(self.fruit_basket):
+            print(f"\t{idx+1}) name = \"{fruit.name()}\", shape = \"{fruit.shape()}\", taste = \"{fruit.taste()}\"")
 
 
 class FruitStore:
@@ -183,3 +186,16 @@ if fruit_store.can_buy(rohan,FruitLabel.apple):
     fruit = fruit_store.buy(rohan,FruitLabel.apple)
     rohan.add_fruit_to_basket(fruit)
 rohan.list_all_fruits_in_basket()
+
+
+# Output of above code execution
+#
+# A fruit store is opened with name PythonFruitFactory
+# PythonFruitFactory now has APPLE's
+# PythonFruitFactory now has ORANGE's
+# PythonFruitFactory now has KIWI's
+# Rohan bought KIWI
+# Rohan bought APPLE
+# Rohan's basket has these fruits:
+# 	1) name = "KIWI", shape = "Ovoid", taste = "Sweet And Sour"
+# 	2) name = "APPLE", shape = "Roundish", taste = "Sweet, Tart or a little of both"
