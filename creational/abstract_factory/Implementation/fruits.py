@@ -1,6 +1,6 @@
 from creational.abstract_factory.interfaces import Fruit, ProductFactory
 from enum import Enum
-from typing import Optional
+from typing import Optional, Any
 
 
 class FruitLabel(Enum):
@@ -14,6 +14,7 @@ class FruitFactory(ProductFactory):
     """
     NOTE : In this factory we will register all the fruit products templates
     """
+
     def add_one_item(self, fruit_label: FruitLabel, fruit: Fruit) -> None:
         """
         add one fruit label and fruit to our factory
@@ -29,12 +30,13 @@ class FruitFactory(ProductFactory):
         be dynamic where we will pass all the fruit template needs to be added in this factory)
         :return:
         """
+        print("Adding all the fruits")
         all_fruits = [(FruitLabel.apple, Apple), (FruitLabel.watermelon,
                                                   WaterMelon)]  # Note that we only registered the class template not the instance of the class
         for fruit_label, fruit in all_fruits:
             self.add_one_item(fruit_label, fruit)
 
-    def is_item_available(self, fruit_label: FruitLabel) -> bool:
+    def is_item_available(self, fruit_label: Any) -> bool:
         """
         check that the fruit available to this corresponding fruit label
         :param fruit_label:
@@ -52,6 +54,16 @@ class FruitFactory(ProductFactory):
             return self.factory[fruit_label]()
         return None
 
+    def get_item_template(self, fruit_label: FruitLabel) -> Optional:
+        """
+        Get the template of the fruit if fruit_label is present in our factory otherwise return None
+        :param fruit_label:
+        :return:
+        """
+        if fruit_label in self.factory:
+            return self.factory[fruit_label]
+        return None
+
 
 class Apple(Fruit):
     def name(self) -> str:
@@ -60,7 +72,8 @@ class Apple(Fruit):
     def category(self) -> str:
         return Fruit.category() + " -> Apple"
 
-    def price(self) -> float:
+    @staticmethod
+    def price() -> float:
         return 10.0
 
     def shape(self) -> str:
@@ -83,7 +96,8 @@ class WaterMelon(Fruit):
     def category(self) -> str:
         return Fruit.category() + " -> WaterMelon"
 
-    def price(self) -> float:
+    @staticmethod
+    def price() -> float:
         return 5.45
 
     def shape(self) -> str:

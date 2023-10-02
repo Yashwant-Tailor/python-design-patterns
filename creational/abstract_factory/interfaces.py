@@ -16,6 +16,7 @@ class ShopProduct(ABC):
     Interface , followed by every product in the shop
     This interface will have basic feature of a product
     """
+
     @abstractmethod
     def name(self) -> str:
         """
@@ -48,10 +49,11 @@ class ShopProduct(ABC):
         pass
 
 
-class Fruit(ABC, ShopProduct):
+class Fruit(ShopProduct,ABC):
     """
     All fruits should implement this interface
     """
+
     @staticmethod
     def category() -> str:
         """
@@ -83,10 +85,11 @@ class Fruit(ABC, ShopProduct):
         pass
 
 
-class SmartPhone(ABC, ShopProduct):
+class SmartPhone(ShopProduct,ABC):
     """
     All SmartPhone should implement this method
     """
+
     @staticmethod
     def category() -> str:
         """
@@ -118,11 +121,11 @@ class SmartPhone(ABC, ShopProduct):
         pass
 
 
-
 class ProductFactory(ABC):
     """
     All factories should implement this interface
     """
+
     def __init__(self):
         self.factory = {}
 
@@ -162,6 +165,15 @@ class ProductFactory(ABC):
         """
         pass
 
+    @abstractmethod
+    def get_item_template(self, item_label: Any) -> Optional:
+        """
+        If item is available then return the template of the corresponding item otherwise return None
+        :param item_label:
+        :return: Instance / None
+        """
+        pass
+
 
 class Wallet(ABC):
     @abstractmethod
@@ -175,84 +187,3 @@ class Wallet(ABC):
     def get_wallet_owner_name(self) -> str:
         pass
 
-
-class ProductFactory_new1():
-    def __init__(self):
-        self.factory = {}
-
-    def add_one_item(self, item_label: Any, item: Any) -> None:
-        self.factory[item_label] = item
-
-    def add_all_item(self, all_items: list[(Any, Any)]) -> None:
-        for item_label, item in all_items:
-            self.add_one_item(item_label, item)
-
-    def is_item_available(self, item_label: Any) -> bool:
-        return item_label in self.factory
-
-    def get_item(self, item_label: Any) -> Any:
-        if self.is_item_available(item_label):
-            return self.factory[item_label]
-        return None
-
-
-class ProductFactory_old():
-    def __init__(self):
-        self.factory = {}
-
-    def _add_one_item(self, item_label: Any, item: Any) -> None:
-        self.factory[item_label] = item
-
-    def _add_all_item(self, all_items: list[(Any, Any)]) -> None:
-        for item_label, item in all_items:
-            self._add_one_item(item_label, item)
-
-    def _item_is_in_store(self, item_label: Any) -> bool:
-        if item_label not in self.factory:
-            raise ItemNotAvailableError(f"{item_label.value} is not available in store")
-        return True
-
-    def _customer_has_enough_balance(self, customer_wallet: Wallet, item: ShopProduct) -> bool:
-        if customer_wallet.get_wallet_balance() < item.price():
-            raise NotEnoughBalanceError(
-                f"{customer_wallet.get_wallet_owner_name()} doesn't have the enough balance to buy {item.name()}")
-        return True
-
-    def can_buy(self, customer_wallet: Wallet, item_label: Any):
-        try:
-            self._item_is_in_store(item_label)
-            self._customer_has_enough_balance(customer_wallet, self.factory[item_label])
-            return True
-        except ItemNotAvailableError as e:
-            print(e)
-            return False
-        except NotEnoughBalanceError as e:
-            print(e)
-            return False
-        except Exception as e:
-            raise e
-
-    def buy(self, customer_wallet: Wallet, item_label: Any) -> Any:
-        self._item_is_in_store(item_label)
-        self._customer_has_enough_balance(customer_wallet)
-        curr_balance = customer_wallet.get_wallet_balance()
-        item_price = self.factory[item_label].price()
-        curr_balance -= item_price
-        customer_wallet.set_wallet_balance(curr_balance)
-        return self.factory[item_label]()  # instantiation of actual class
-
-
-class ItemNotAvailableError(Exception):
-    def __init__(self, msg):
-        super().__init__(msg)
-
-    def __str__(self):
-        return repr(self)
-
-
-class NotEnoughBalanceError(Exception):
-    def __init__(self, msg):
-        super().__init__(msg)
-
-    def __str__(self):
-        return repr(self)

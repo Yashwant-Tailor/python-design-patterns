@@ -1,6 +1,6 @@
 from creational.abstract_factory.interfaces import SmartPhone, ProductFactory
 from enum import Enum
-from typing import Optional
+from typing import Optional, Any
 
 
 class SmartPhoneLabel(Enum):
@@ -30,12 +30,13 @@ class SmartPhoneFactory(ProductFactory):
         be dynamic where we will pass all the smartphone template needs to be added in this factory)
         :return:
         """
+        print("Adding all the smart-phones")
         all_fruits = [(SmartPhoneLabel.mamsung, Mamsung), (SmartPhoneLabel.aphone,
                                                            aPhone)]  # Note that we only registered the class template not the instance of the class
         for smart_phone_label, fruit in all_fruits:
             self.add_one_item(smart_phone_label, fruit)
 
-    def is_item_available(self, smart_phone_label: SmartPhoneLabel) -> bool:
+    def is_item_available(self, smart_phone_label: Any) -> bool:
         """
         check that the smartphone is available to this corresponding smart_phone_label
         :param smart_phone_label:
@@ -53,6 +54,16 @@ class SmartPhoneFactory(ProductFactory):
             return self.factory[smart_phone_label]()
         return None
 
+    def get_item_template(self, smart_phone_label: SmartPhoneLabel) -> Optional:
+        """
+        Get the template of the smartphone if smart_phone_label is present in our factory otherwise return None
+        :param smart_phone_label:
+        :return:
+        """
+        if smart_phone_label in self.factory:
+            return self.factory[smart_phone_label]
+        return None
+
 
 class Mamsung(SmartPhone):
     def name(self) -> str:
@@ -61,7 +72,8 @@ class Mamsung(SmartPhone):
     def category(self) -> str:
         return SmartPhone.category() + " -> Mamsung"
 
-    def price(self) -> float:
+    @staticmethod
+    def price() -> float:
         return 3029.38
 
     def shape(self) -> str:
@@ -84,7 +96,8 @@ class aPhone(SmartPhone):
     def category(self) -> str:
         return SmartPhone.category() + " -> aPhone"
 
-    def price(self) -> float:
+    @staticmethod
+    def price() -> float:
         return 189289.38  # a number you can't afford
 
     def shape(self) -> str:
