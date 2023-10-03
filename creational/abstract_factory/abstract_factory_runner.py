@@ -114,9 +114,9 @@ class NotEnoughBalanceError(Exception):
 
 
 class Shop():
-    def __init__(self, name):
+    def __init__(self, name: str, factory=None) -> None:
         self.shop_name = name
-        self.factory = AllProductFactory()
+        self.factory = factory
 
     def add_all_item(self) -> None:
         self.factory.add_all_item()
@@ -177,12 +177,12 @@ class Customer(Wallet):
     def get_wallet_owner_name(self) -> str:
         return self.name
 
+if __name__ == "__main__":
+    store = Shop("PythonItemFactory", AllProductFactory())
+    store.add_all_item()
+    memba = Customer("Memba", 4000)
 
-store = Shop("PythonFruitFactory")
-store.add_all_item()
-memba = Customer("Memba", 4000)
-
-if store.can_buy(memba, FruitLabel.orange):
-    fruit = store.buy(memba, FruitLabel.orange)
-if store.can_buy(memba, FruitLabel.apple):
-    fruit = store.buy(memba, FruitLabel.apple)
+    if store.can_buy(memba, FruitLabel.orange):
+        fruit = store.buy(memba, FruitLabel.orange)
+    if store.can_buy(memba, FruitLabel.apple):
+        fruit = store.buy(memba, FruitLabel.apple)
